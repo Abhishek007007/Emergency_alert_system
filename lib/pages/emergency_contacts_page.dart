@@ -107,6 +107,8 @@ class _EmergencyContactsPageState extends State<EmergencyContactsPage> {
                                   }
                                 }
                                 setState(() {
+                                  _nameController.text="";
+                                  _phoneNumberController.text = "";
                                   emergencyContactList;
                                 });
                               }

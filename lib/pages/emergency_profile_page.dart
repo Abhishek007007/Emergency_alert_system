@@ -181,7 +181,8 @@ class _EmergencyProfilePageState extends State<EmergencyProfilePage> {
 }
 
 class ProfileForm extends StatelessWidget {
-  const ProfileForm({
+ const ProfileForm({
+
     super.key,
     required TextEditingController nameController,
     required TextEditingController dateController,
@@ -197,6 +198,9 @@ class ProfileForm extends StatelessWidget {
   final TextEditingController _bloodGroupController;
   final TextEditingController _medicalController;
 
+final nameStorage = const FlutterSecureStorage();
+ final String nameKey = "Pname";
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -236,6 +240,7 @@ class ProfileForm extends StatelessWidget {
                 child: CustomButton(
               text: 'Save Profile',
               onPressed: () async {
+                await nameStorage.write(key: nameKey, value: _nameController.text);
                 String saveStatus = await setProfile(
                   _nameController.text,
                   _dateController.text,

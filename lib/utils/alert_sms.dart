@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'emergency_contact_storage.dart';
@@ -11,6 +12,8 @@ class SMSSender {
   List<List<String>> emergencyContactList = [];
 
   static Future<void> sendSMS() async {
+    const nameStorage = FlutterSecureStorage();
+    String nameKey = "Pname";
     final Telephony telephony = Telephony.instance;
     bool? permissionsGranted = await telephony.requestPhoneAndSmsPermissions;
     Position currentPosition = await LocationModule.determinePosition();
@@ -21,6 +24,7 @@ class SMSSender {
     String encodedComma = Uri.encodeComponent(",");
     String mapUrl =
         "https://maps.google.com/maps?q=$encodedLatitude$encodedComma$encodedLongitude";
+    String ProfileName = await nameStorage.read(key: nameKey)??""; 
     if (permissionsGranted!) {
       final dynamic temp =
           jsonDecode(await EmergencyDataStorage.readAllContacts() ?? "[]");
@@ -30,7 +34,7 @@ class SMSSender {
         await telephony.sendSms(
             to: recipient[1],
             message:
-                'You have received Emergency Alert from {name}.Here is the location of the alert:\n$mapUrl');
+                'You have received Emergency Alert from $ProfileName .Here is the location of the alert:\n$mapUrl');
       }
     } else {
       throw Exception("Permission not granted");
